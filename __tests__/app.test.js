@@ -13,5 +13,13 @@ beforeEach(() => {
 });
 
 describe("api", () => {
-  test("status: 404, path not found", () => {});
+  test("status: 404, path not found", () => {
+    return request(app)
+      .get("/api/invalidpath")
+      .expect(404)
+      .then((response) => {
+        const msg = response.body.msg;
+        expect(msg).toBe("path not found");
+      });
+  });
 });
