@@ -22,4 +22,24 @@ describe("api", () => {
         expect(msg).toBe("path not found");
       });
   });
+  describe("/api/topics", () => {
+    test("status: 200, should return an array of topic objects", () => {
+      return request(app)
+        .get("/api/topics")
+        .expect(200)
+        .then((response) => {
+            const topics = response.body.topics;
+            expect(topics).toBeInstanceOf(Array);
+            expect(topics).toHaveLength(3);
+            topics.forEach((topic) => {
+                expect(topic).toEqual(
+                    expect.objectContaining({
+                        description: expect.any(String),
+                        slug: expect.any(String)
+                    })
+                )
+            })
+        });
+    });
+  });
 });
