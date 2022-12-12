@@ -28,18 +28,43 @@ describe("api", () => {
         .get("/api/topics")
         .expect(200)
         .then((response) => {
-            const topics = response.body.topics;
-            expect(topics).toBeInstanceOf(Array);
-            expect(topics).toHaveLength(3);
-            topics.forEach((topic) => {
-                expect(topic).toEqual(
+          const topics = response.body.topics;
+          expect(topics).toBeInstanceOf(Array);
+          expect(topics).toHaveLength(3);
+          topics.forEach((topic) => {
+            expect(topic).toEqual(
+              expect.objectContaining({
+                description: expect.any(String),
+                slug: expect.any(String),
+              })
+            );
+          });
+        });
+    });
+  });
+  describe("/api/articles", () => {
+    test("status: 200, should return an array of article objects", () => {
+      return request(app)
+        .get("/api/articles")
+        .expect(200)
+        .then((response) => {
+            const articles = response.body.articles;
+            expect(articles).toBeInstanceOf(Array);
+            expect(articles).toHaveLength(12);
+            articles.forEach((article) => {
+                expect(article).toEqual(
                     expect.objectContaining({
-                        description: expect.any(String),
-                        slug: expect.any(String)
+                        article_id: expect.any(Number),
+                        title: expect.any(String),
+                        topic: expect.any(String),
+                        author: expect.any(String),
+                        body: expect.any(String),
+                        created_at: expect.any(String),
+                        votes: expect.any(Number)
                     })
                 )
             })
         });
-    });
+    })
   });
 });
