@@ -13,7 +13,8 @@ exports.selectTopics = () => {
 exports.selectArticles = () => {
   queryStr = `
   SELECT *
-  FROM articles`;
+  FROM articles
+  ORDER BY created_at desc`;
 
   return db.query(queryStr).then((articles) => {
     return articles.rows;
