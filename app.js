@@ -16,6 +16,8 @@ app.get("/api/topics", getTopics);
 
 app.get("/api/articles", getArticles);
 
+app.get("/api/articles/:article_id", getArticleById);
+
 app.use(handle500errors);
 
 app.all("*", handle404errors);

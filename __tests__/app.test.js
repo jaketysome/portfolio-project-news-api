@@ -60,7 +60,7 @@ describe("api", () => {
                 body: expect.any(String),
                 created_at: expect.any(String),
                 votes: expect.any(Number),
-                comment_count: expect.any(Number)
+                comment_count: expect.any(Number),
               })
             );
           });
@@ -73,6 +73,17 @@ describe("api", () => {
         .then((response) => {
           const articles = response.body.articles;
           expect(articles).toBeSortedBy("created_at", { descending: true });
+        });
+    });
+  });
+  describe("/api/articles/:article_id", () => {
+    test("status: 200, should return the requested article object ", () => {
+      return request(app)
+        .get("/api/articles/3")
+        .expect(200)
+        .then((response) => {
+            const article = response.body.article;
+            expect(article.article_id).toBe(3)
         });
     });
   });
