@@ -113,15 +113,17 @@ describe("api", () => {
 //         .then((response) => {
 //             const comments = response.body.comments;
 //             expect(comments).toHaveLength(2);
-//             expect(comments).toEqual(
-//                 expect.objectContaining({
-//                     comment_id: expect.any(Number),
-//                     votes: expect.any(Number),
-//                     created_at: expect.any(String),
-//                     author: expect.any(String),
-//                     body: expect.any(String)
-//                 })
-//             )
+//             comments.forEach((comment) => {
+//                 expect(comment).toEqual(
+//                     expect.objectContaining({
+//                         comment_id: expect.any(Number),
+//                         votes: expect.any(Number),
+//                         created_at: expect.any(String),
+//                         author: expect.any(String),
+//                         body: expect.any(String)
+//                     })
+//                 )
+//             })
 //         });
 //     });
 //   });
