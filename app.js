@@ -3,6 +3,7 @@ const app = express();
 const {
   handle404errors,
   handle500errors,
+  handle400errors
 } = require("./controllers/controllers.errors");
 const {
   getTopics,
@@ -17,6 +18,8 @@ app.get("/api/topics", getTopics);
 app.get("/api/articles", getArticles);
 
 app.get("/api/articles/:article_id", getArticleById);
+
+app.use(handle400errors);
 
 app.use(handle500errors);
 

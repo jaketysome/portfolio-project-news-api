@@ -86,13 +86,22 @@ describe("api", () => {
           expect(article.article_id).toBe(3);
         });
     });
-    test("status: 404, article not found", () => {
+    test("status: 404, valid id but article does not exist", () => {
       return request(app)
         .get("/api/articles/25")
         .expect(404)
         .then((response) => {
           const msg = response.body.msg;
           expect(msg).toBe("article not found");
+        });
+    });
+    test("status: 400, invalid id provided", () => {
+      return request(app)
+        .get("/api/articles/invalidid")
+        .expect(400)
+        .then((response) => {
+          const msg = response.body.msg;
+          expect(msg).toBe("bad request");
         });
     });
   });
