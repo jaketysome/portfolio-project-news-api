@@ -82,8 +82,17 @@ describe("api", () => {
         .get("/api/articles/3")
         .expect(200)
         .then((response) => {
-            const article = response.body.article;
-            expect(article.article_id).toBe(3)
+          const article = response.body.article;
+          expect(article.article_id).toBe(3);
+        });
+    });
+    test("status: 404, article not found", () => {
+      return request(app)
+        .get("/api/articles/25")
+        .expect(404)
+        .then((response) => {
+          const msg = response.body.msg;
+          expect(msg).toBe("article not found");
         });
     });
   });
