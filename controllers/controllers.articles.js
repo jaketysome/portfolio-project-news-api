@@ -46,3 +46,9 @@ exports.getArticleById = (req, res, next) => {
     })
     .catch(next);
 };
+
+// exports.getCommentsByArticleId = (req, res, next) => {
+//   const articleId = req.params.article_id;
+
+  
+// }
