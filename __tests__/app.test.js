@@ -86,15 +86,15 @@ describe("api", () => {
           expect(article.article_id).toBe(3);
           expect(article).toEqual(
             expect.objectContaining({
-                article_id: expect.any(Number),
-                title: expect.any(String),
-                topic: expect.any(String),
-                author: expect.any(String),
-                body: expect.any(String),
-                created_at: expect.any(String),
-                votes: expect.any(Number)
+              article_id: expect.any(Number),
+              title: expect.any(String),
+              topic: expect.any(String),
+              author: expect.any(String),
+              body: expect.any(String),
+              created_at: expect.any(String),
+              votes: expect.any(Number),
             })
-          )
+          );
         });
     });
     test("status: 404, valid id but article does not exist", () => {
@@ -122,19 +122,28 @@ describe("api", () => {
         .get("/api/articles/3/comments")
         .expect(200)
         .then((response) => {
-            const comments = response.body.comments;
-            expect(comments).toHaveLength(2);
-            comments.forEach((comment) => {
-                expect(comment).toEqual(
-                    expect.objectContaining({
-                        comment_id: expect.any(Number),
-                        votes: expect.any(Number),
-                        created_at: expect.any(String),
-                        author: expect.any(String),
-                        body: expect.any(String)
-                    })
-                )
-            })
+          const comments = response.body.comments;
+          expect(comments).toHaveLength(2);
+          comments.forEach((comment) => {
+            expect(comment).toEqual(
+              expect.objectContaining({
+                comment_id: expect.any(Number),
+                votes: expect.any(Number),
+                created_at: expect.any(String),
+                author: expect.any(String),
+                body: expect.any(String),
+              })
+            );
+          });
+        });
+    });
+    test("status: 404, valid article_id but article has no comments", () => {
+      return request(app)
+        .get("/api/articles/4/comments")
+        .expect(404)
+        .then((response) => {
+          const msg = response.body.msg;
+          expect(msg).toBe("article has no comments");
         });
     });
   });

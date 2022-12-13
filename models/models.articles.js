@@ -30,9 +30,9 @@ exports.selectArticleById = (articleId) => {
 
   return db.query(queryStr, [articleId]).then((article) => {
     if (article.rowCount === 0) {
-      return Promise.reject({status: 404, msg: "article not found"});
+      return Promise.reject({ status: 404, msg: "article not found" });
     }
-      return article.rows[0];
+    return article.rows[0];
   });
 };
 
@@ -50,6 +50,9 @@ exports.selectCommentsByArticleId = (articleId) => {
   ORDER BY comments.created_at desc`;
 
   return db.query(queryStr, [articleId]).then((comments) => {
+    if (comments.rowCount === 0) {
+      return Promise.reject({ status: 404, msg: "article has no comments" });
+    }
     return comments.rows;
-  })
+  });
 };
