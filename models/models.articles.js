@@ -11,12 +11,26 @@ exports.selectTopics = () => {
 };
 
 exports.selectArticles = () => {
-  articlesQueryStr = `
+  queryStr = `
   SELECT *
   FROM articles
   ORDER BY created_at desc`;
 
-  return db.query(articlesQueryStr).then((articles) => {
+  return db.query(queryStr).then((articles) => {
     return articles.rows;
+  });
+};
+
+exports.selectArticleById = (articleId) => {
+  queryStr = `
+  SELECT *
+  FROM articles
+  WHERE article_id = $1`;
+
+  return db.query(queryStr, [articleId]).then((article) => {
+    if (article.rowCount === 0) {
+      return Promise.reject({status: 404, msg: "article not found"});
+    }
+      return article.rows[0];
   });
 };

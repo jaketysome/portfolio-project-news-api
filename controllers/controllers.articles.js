@@ -1,4 +1,8 @@
-const { selectTopics, selectArticles } = require("../models/models.articles");
+const {
+  selectTopics,
+  selectArticles,
+  selectArticleById,
+} = require("../models/models.articles");
 const { countComments } = require("../models/models.comments");
 
 exports.getTopics = (req, res, next) => {
@@ -21,12 +25,24 @@ exports.getArticles = (req, res, next) => {
           } else {
             article.comment_count = 0;
           }
-        })
-      })
+        });
+      });
       return articles;
     })
     .then((articles) => {
       res.status(200).send({ articles });
     })
     .catch(next);
+};
+
+exports.getArticleById = (req, res, next) => {
+  const articleId = req.params.article_id;
+
+  selectArticleById(articleId)
+    .then((article) => {
+      res.status(200).send({ article });
+    })
+    .catch((err) => {
+      next(err);
+    });
 };
