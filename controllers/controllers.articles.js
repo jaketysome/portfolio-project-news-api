@@ -40,9 +40,9 @@ exports.getArticleById = (req, res, next) => {
 
   selectArticleById(articleId)
     .then((article) => {
-      !article 
-      ? res.status(404).send({msg: "article not found"})
-      : res.status(200).send({ article });
+      res.status(200).send({ article });
     })
-    .catch(next);
+    .catch((err) => {
+      next(err);
+    });
 };

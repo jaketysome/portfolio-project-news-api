@@ -28,6 +28,9 @@ exports.selectArticleById = (articleId) => {
   WHERE article_id = $1`;
 
   return db.query(queryStr, [articleId]).then((article) => {
-    return article.rows[0];
+    if (article.rowCount === 0) {
+      return Promise.reject({status: 404, msg: "article not found"});
+    }
+      return article.rows[0];
   });
 };

@@ -84,6 +84,17 @@ describe("api", () => {
         .then((response) => {
           const article = response.body.article;
           expect(article.article_id).toBe(3);
+          expect(article).toEqual(
+            expect.objectContaining({
+                article_id: expect.any(Number),
+                title: expect.any(String),
+                topic: expect.any(String),
+                author: expect.any(String),
+                body: expect.any(String),
+                created_at: expect.any(String),
+                votes: expect.any(Number)
+            })
+          )
         });
     });
     test("status: 404, valid id but article does not exist", () => {
