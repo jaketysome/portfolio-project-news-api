@@ -137,14 +137,41 @@ describe("api", () => {
           });
         });
     });
+    test("status: 200, should return an empty array if article has no comments", () => {
+      return request(app)
+        .get("/api/articles/4/comments")
+        .expect(200)
+        .then((response) => {
+          const comments = response.body.comments;
+          expect(comments).toHaveLength(0);
+        });
+    });
     test("comments should be served with the most recent comments first", () => {
-        return request(app)
+      return request(app)
         .get("/api/articles/3/comments")
         .expect(200)
         .then((response) => {
           const comments = response.body.comments;
           expect(comments).toBeSortedBy("created_at", { descending: true });
         });
-    })
+    });
+    test("status: 400, invalid article id provided", () => {
+      return request(app)
+        .get("/api/articles/invalidid/comments")
+        .expect(400)
+        .then((response) => {
+          const msg = response.body.msg;
+          expect(msg).toBe("bad request");
+        });
+    });
+    // test("status: 404, valid id but article does not exist", () => {
+    //   return request(app)
+    //     .get("/api/articles/25/comments")
+    //     .expect(404)
+    //     .then((response) => {
+    //       const msg = response.body.msg;
+    //       expect(msg).toBe("article not found");
+    //     });
+    // });
   });
 });

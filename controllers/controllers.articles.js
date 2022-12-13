@@ -2,7 +2,8 @@ const {
   selectTopics,
   selectArticles,
   selectArticleById,
-  selectCommentsByArticleId
+  selectCommentsByArticleId,
+  checkIfArticleExists,
 } = require("../models/models.articles");
 const { countComments } = require("../models/models.comments");
 
@@ -41,8 +42,7 @@ exports.getArticleById = (req, res, next) => {
 
   selectArticleById(articleId)
     .then((article) => {
-
-    res.status(200).send({ article });
+      res.status(200).send({ article });
     })
     .catch((err) => {
       next(err);
@@ -55,5 +55,8 @@ exports.getCommentsByArticleId = (req, res, next) => {
   selectCommentsByArticleId(articleId)
     .then((comments) => {
       res.status(200).send({ comments });
-    }).catch(next); 
+    })
+    .catch((err) => {
+      next(err);
+    });
 };

@@ -38,18 +38,33 @@ exports.selectArticleById = (articleId) => {
 
 exports.selectCommentsByArticleId = (articleId) => {
   queryStr = `
-  SELECT comments.comment_id, 
+  SELECT comments.article_id,
+         comments.comment_id, 
          comments.votes, 
          comments.created_at, 
          comments.author, 
          comments.body
   FROM comments
-  JOIN articles
-  ON articles.article_id = comments.article_id
-  WHERE articles.article_id = $1
+  WHERE comments.article_id = $1
   ORDER BY comments.created_at desc`;
 
   return db.query(queryStr, [articleId]).then((comments) => {
     return comments.rows;
+  });
+};
+
+exports.checkIfArticleExists = (articleId) => {
+  queryStr = `
+    SELECT *
+    FROM articles
+    WHERE article_id = $1`;
+
+  return db.query(queryStr, [articleId]).then((articles) => {
+    console.log(articles.rows[0].article_id)
+    if (articles.rows[0].article_id !== articleId) {
+      return Promise.reject({ status: 404, msg: "article not found" });
+    } else {
+      return true;
+    }
   });
 };
