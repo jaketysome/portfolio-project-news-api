@@ -11,12 +11,12 @@ exports.selectTopics = () => {
 };
 
 exports.selectArticles = () => {
-  queryStr = `
+  articlesQueryStr = `
   SELECT *
   FROM articles
   ORDER BY created_at desc`;
 
-  return db.query(queryStr).then((articles) => {
+  return db.query(articlesQueryStr).then((articles) => {
     return articles.rows;
   });
 };

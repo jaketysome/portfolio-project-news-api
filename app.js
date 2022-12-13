@@ -4,7 +4,11 @@ const {
   handle404errors,
   handle500errors,
 } = require("./controllers/controllers.errors");
-const { getTopics, getArticles } = require("./controllers/controllers.news");
+const {
+  getTopics,
+  getArticles,
+  getArticleById,
+} = require("./controllers/controllers.articles");
 
 app.use(express.json());
 

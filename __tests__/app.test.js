@@ -49,7 +49,6 @@ describe("api", () => {
         .expect(200)
         .then((response) => {
           const articles = response.body.articles;
-          expect(articles).toBeInstanceOf(Array);
           expect(articles).toHaveLength(12);
           articles.forEach((article) => {
             expect(article).toEqual(
@@ -61,6 +60,7 @@ describe("api", () => {
                 body: expect.any(String),
                 created_at: expect.any(String),
                 votes: expect.any(Number),
+                comment_count: expect.any(Number)
               })
             );
           });
