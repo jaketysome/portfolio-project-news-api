@@ -35,15 +35,18 @@ exports.selectArticleById = (articleId) => {
 
 exports.selectCommentsByArticleId = (articleId) => {
   queryStr = `
-  SELECT comments.comment_id, comments.votes, comments.created_at, comments.author, comments.body
+  SELECT comments.comment_id, 
+         comments.votes, 
+         comments.created_at, 
+         comments.author, 
+         comments.body
   FROM comments
   JOIN articles
   ON articles.article_id = comments.article_id
-  WHERE articles.article_id = 1
+  WHERE articles.article_id = $1
   ORDER BY comments.created_at desc`;
 
   return db.query(queryStr, [articleId]).then((comments) => {
-    console.log(comments.rows, '<<<<<<<')
     return comments.rows;
   })
 };
