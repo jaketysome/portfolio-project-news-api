@@ -50,9 +50,6 @@ exports.selectCommentsByArticleId = (articleId) => {
   ORDER BY comments.created_at desc`;
 
   return db.query(queryStr, [articleId]).then((comments) => {
-    if (comments.rowCount === 0) {
-      return Promise.reject({ status: 404, msg: "article has no comments" });
-    }
     return comments.rows;
   });
 };

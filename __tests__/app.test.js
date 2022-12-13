@@ -146,14 +146,5 @@ describe("api", () => {
           expect(comments).toBeSortedBy("created_at", { descending: true });
         });
     })
-    test("status: 404, valid article_id but article has no comments", () => {
-      return request(app)
-        .get("/api/articles/4/comments")
-        .expect(404)
-        .then((response) => {
-          const msg = response.body.msg;
-          expect(msg).toBe("article has no comments");
-        });
-    });
   });
 });
