@@ -137,6 +137,15 @@ describe("api", () => {
           });
         });
     });
+    test("comments should be served with the most recent comments first", () => {
+        return request(app)
+        .get("/api/articles/3/comments")
+        .expect(200)
+        .then((response) => {
+          const comments = response.body.comments;
+          expect(comments).toBeSortedBy("created_at", { descending: true });
+        });
+    })
     test("status: 404, valid article_id but article has no comments", () => {
       return request(app)
         .get("/api/articles/4/comments")
