@@ -174,7 +174,7 @@ describe("api", () => {
         });
     });
   });
-  describe("POST/api/articles/:article_id/comments", () => {
+  describe.only("POST/api/articles/:article_id/comments", () => {
     test("status: 200, responds with the posted comment", () => {
       const requestBody = {
         username: "butter_bridge",
@@ -186,17 +186,30 @@ describe("api", () => {
         .expect(201)
         .then((response) => {
           const postedComment = response.body.postedComment;
-          expect(postedComment.article_id).toBe(2)
+          expect(postedComment.article_id).toBe(2);
           expect(postedComment).toEqual(
             expect.objectContaining({
-                comment_id: expect.any(Number),
-                body: expect.any(String),
-                article_id: expect.any(Number),
-                author: expect.any(String),
-                votes: expect.any(Number),
-                created_at: expect.any(String)
+              comment_id: expect.any(Number),
+              body: expect.any(String),
+              article_id: expect.any(Number),
+              author: expect.any(String),
+              votes: expect.any(Number),
+              created_at: expect.any(String),
             })
-          )
+          );
+        });
+    });
+    test("status: 400, missing required request keys", () => {
+      const requestBody = {
+        body: "generic comment",
+      };
+      return request(app)
+        .post("/api/articles/2/comments")
+        .send(requestBody)
+        .expect(400)
+        .then((response) => {
+          const msg = response.body.msg;
+          expect(msg).toBe("bad request");
         });
     });
   });

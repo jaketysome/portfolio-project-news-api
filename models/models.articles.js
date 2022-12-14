@@ -71,14 +71,20 @@ exports.checkIfArticleExists = (articleId) => {
 exports.insertCommentByArticleId = (articleId, reqBody) => {
   const { body, username } = reqBody;
 
+  if (!username || !body) {
+    return Promise.reject({ status: 400, msg: "bad request" });
+  }
+
   queryStr = `
   INSERT INTO comments
   (body, article_id, author)
   VALUES
   ($1, $2, $3)
-  RETURNING *;`
+  RETURNING *;`;
 
-  return db.query(queryStr, [body, articleId, username]).then((postedComment) => {
-    return postedComment.rows[0]
-  })
+  return db
+    .query(queryStr, [body, articleId, username])
+    .then((postedComment) => {
+      return postedComment.rows[0];
+    });
 };
