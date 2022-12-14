@@ -2,6 +2,8 @@ const {
   selectTopics,
   selectArticles,
   selectArticleById,
+  selectCommentsByArticleId,
+  checkIfArticleExists,
 } = require("../models/models.articles");
 const { countComments } = require("../models/models.comments");
 
@@ -41,6 +43,20 @@ exports.getArticleById = (req, res, next) => {
   selectArticleById(articleId)
     .then((article) => {
       res.status(200).send({ article });
+    })
+    .catch((err) => {
+      next(err);
+    });
+};
+
+exports.getCommentsByArticleId = (req, res, next) => {
+  const articleId = req.params.article_id;
+
+  const promises = [checkIfArticleExists(articleId), selectCommentsByArticleId(articleId)]
+
+  Promise.all(promises).then(([articleExists, comments]) => {
+      console.log(comments, '<<<< comments')
+      res.status(200).send({ comments });
     })
     .catch((err) => {
       next(err);
