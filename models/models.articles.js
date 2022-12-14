@@ -80,7 +80,7 @@ exports.insertCommentByArticleId = (articleId, reqBody) => {
   (body, article_id, author)
   VALUES
   ($1, $2, $3)
-  RETURNING *;`;
+  RETURNING *`;
 
   return db
     .query(queryStr, [body, articleId, username])

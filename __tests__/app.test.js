@@ -222,6 +222,20 @@ describe("api", () => {
           expect(msg).toBe("bad request");
         });
     });
+    test("status: 400, username does not exist", () => {
+      const requestBody = {
+        username: "cool_guy73",
+        body: "generic comment",
+      };
+      return request(app)
+        .post("/api/articles/4/comments")
+        .send(requestBody)
+        .expect(400)
+        .then((response) => {
+          const msg = response.body.msg;
+          expect(msg).toBe("bad request");
+        });
+    });
     test("status: 400, missing required request keys", () => {
       const requestBody = {
         body: "generic comment",
