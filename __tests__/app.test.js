@@ -164,14 +164,14 @@ describe("api", () => {
           expect(msg).toBe("bad request");
         });
     });
-    // test("status: 404, valid id but article does not exist", () => {
-    //   return request(app)
-    //     .get("/api/articles/25/comments")
-    //     .expect(404)
-    //     .then((response) => {
-    //       const msg = response.body.msg;
-    //       expect(msg).toBe("article not found");
-    //     });
-    // });
+    test("status: 404, valid id but article does not exist", () => {
+      return request(app)
+        .get("/api/articles/25/comments")
+        .expect(404)
+        .then((response) => {
+          const msg = response.body.msg;
+          expect(msg).toBe("article not found");
+        });
+    });
   });
 });

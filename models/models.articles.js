@@ -49,6 +49,7 @@ exports.selectCommentsByArticleId = (articleId) => {
   ORDER BY comments.created_at desc`;
 
   return db.query(queryStr, [articleId]).then((comments) => {
+    
     return comments.rows;
   });
 };
@@ -60,8 +61,7 @@ exports.checkIfArticleExists = (articleId) => {
     WHERE article_id = $1`;
 
   return db.query(queryStr, [articleId]).then((articles) => {
-    console.log(articles.rows[0].article_id)
-    if (articles.rows[0].article_id !== articleId) {
+    if (articles.rowCount === 0) {
       return Promise.reject({ status: 404, msg: "article not found" });
     } else {
       return true;

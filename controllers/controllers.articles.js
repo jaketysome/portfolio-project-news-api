@@ -52,8 +52,10 @@ exports.getArticleById = (req, res, next) => {
 exports.getCommentsByArticleId = (req, res, next) => {
   const articleId = req.params.article_id;
 
-  selectCommentsByArticleId(articleId)
-    .then((comments) => {
+  const promises = [checkIfArticleExists(articleId), selectCommentsByArticleId(articleId)]
+
+  Promise.all(promises).then(([articleExists, comments]) => {
+      console.log(comments, '<<<< comments')
       res.status(200).send({ comments });
     })
     .catch((err) => {
