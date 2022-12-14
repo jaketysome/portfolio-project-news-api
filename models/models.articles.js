@@ -49,7 +49,6 @@ exports.selectCommentsByArticleId = (articleId) => {
   ORDER BY comments.created_at desc`;
 
   return db.query(queryStr, [articleId]).then((comments) => {
-    
     return comments.rows;
   });
 };
@@ -67,4 +66,19 @@ exports.checkIfArticleExists = (articleId) => {
       return true;
     }
   });
+};
+
+exports.insertCommentByArticleId = (articleId, reqBody) => {
+  const { body, username } = reqBody;
+
+  queryStr = `
+  INSERT INTO comments
+  (body, article_id, author)
+  VALUES
+  ($1, $2, $3)
+  RETURNING *;`
+
+  return db.query(queryStr, [body, articleId, username]).then((postedComment) => {
+    return postedComment.rows[0]
+  })
 };

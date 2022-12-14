@@ -22,7 +22,7 @@ describe("api", () => {
         expect(msg).toBe("path not found");
       });
   });
-  describe("/api/topics", () => {
+  describe("GET/api/topics", () => {
     test("status: 200, should return an array of topic objects", () => {
       return request(app)
         .get("/api/topics")
@@ -42,7 +42,7 @@ describe("api", () => {
         });
     });
   });
-  describe("/api/articles", () => {
+  describe("GET/api/articles", () => {
     test("status: 200, should return an array of article objects", () => {
       return request(app)
         .get("/api/articles")
@@ -76,7 +76,7 @@ describe("api", () => {
         });
     });
   });
-  describe("/api/articles/:article_id", () => {
+  describe("GET/api/articles/:article_id", () => {
     test("status: 200, should return the requested article object ", () => {
       return request(app)
         .get("/api/articles/3")
@@ -116,7 +116,7 @@ describe("api", () => {
         });
     });
   });
-  describe("/api/articles/:article_id/comments", () => {
+  describe("GET/api/articles/:article_id/comments", () => {
     test("status: 200, should return an array of comment objects for the given article_id", () => {
       return request(app)
         .get("/api/articles/3/comments")
@@ -171,6 +171,32 @@ describe("api", () => {
         .then((response) => {
           const msg = response.body.msg;
           expect(msg).toBe("article not found");
+        });
+    });
+  });
+  describe("POST/api/articles/:article_id/comments", () => {
+    test("status: 200, responds with the posted comment", () => {
+      const requestBody = {
+        username: "butter_bridge",
+        body: "generic comment",
+      };
+      return request(app)
+        .post("/api/articles/2/comments")
+        .send(requestBody)
+        .expect(201)
+        .then((response) => {
+          const postedComment = response.body.postedComment;
+          expect(postedComment.article_id).toBe(2)
+          expect(postedComment).toEqual(
+            expect.objectContaining({
+                comment_id: expect.any(Number),
+                body: expect.any(String),
+                article_id: expect.any(Number),
+                author: expect.any(String),
+                votes: expect.any(Number),
+                created_at: expect.any(String)
+            })
+          )
         });
     });
   });
