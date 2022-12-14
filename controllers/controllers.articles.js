@@ -4,7 +4,7 @@ const {
   selectArticleById,
   selectCommentsByArticleId,
   checkIfArticleExists,
-  insertCommentByArticleId
+  insertCommentByArticleId,
 } = require("../models/models.articles");
 const { countComments } = require("../models/models.comments");
 
@@ -67,8 +67,13 @@ exports.postCommentByArticleId = (req, res, next) => {
   const articleId = req.params.article_id;
   const reqBody = req.body;
 
-  insertCommentByArticleId(articleId, reqBody)
-    .then((postedComment) => {
+  const promises = [
+    checkIfArticleExists(articleId),
+    insertCommentByArticleId(articleId, reqBody),
+  ];
+
+  Promise.all(promises)
+    .then(([articleExists, postedComment]) => {
       res.status(201).send({ postedComment });
     })
     .catch(next);

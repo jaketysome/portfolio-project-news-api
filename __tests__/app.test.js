@@ -199,6 +199,20 @@ describe("api", () => {
           );
         });
     });
+    test("status: 404, valid id but article does not exist", () => {
+      const requestBody = {
+        username: "butter_bridge",
+        body: "generic comment",
+      };
+      return request(app)
+        .post("/api/articles/25/comments")
+        .send(requestBody)
+        .expect(404)
+        .then((response) => {
+          const msg = response.body.msg;
+          expect(msg).toBe("article not found");
+        });
+    });
     test("status: 400, missing required request keys", () => {
       const requestBody = {
         body: "generic comment",
