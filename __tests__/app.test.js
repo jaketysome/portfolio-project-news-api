@@ -213,6 +213,15 @@ describe("api", () => {
           expect(msg).toBe("article not found");
         });
     });
+    test("status: 400, invalid article id provided", () => {
+      return request(app)
+        .get("/api/articles/invalidid/comments")
+        .expect(400)
+        .then((response) => {
+          const msg = response.body.msg;
+          expect(msg).toBe("bad request");
+        });
+    });
     test("status: 400, missing required request keys", () => {
       const requestBody = {
         body: "generic comment",
