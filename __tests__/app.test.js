@@ -325,17 +325,52 @@ describe("api", () => {
         .expect(200)
         .then((response) => {
           const users = response.body.users;
-          expect(users.length).toBe(4)
+          expect(users.length).toBe(4);
           users.forEach((user) => {
-              expect(user).toEqual(
-                expect.objectContaining({
-                  username: expect.any(String),
-                  name: expect.any(String),
-                  avatar_url: expect.any(String),
-                })
-              );
-          })
+            expect(user).toEqual(
+              expect.objectContaining({
+                username: expect.any(String),
+                name: expect.any(String),
+                avatar_url: expect.any(String),
+              })
+            );
+          });
         });
     });
+  });
+  describe("GET /api/articles?topic", () => {
+    test("status: 200, should return articles filtered by the specified topic", () => {
+      return request(app)
+        .get("/api/articles?topic=mitch")
+        .expect(200)
+        .then((response) => {
+          const articles = response.body.articles;
+          expect(articles.length).toBe(11);
+          articles.forEach((article) => {
+            expect(article.topic).toBe("mitch");
+            expect(article).toEqual(
+              expect.objectContaining({
+                article_id: expect.any(Number),
+                title: expect.any(String),
+                author: expect.any(String),
+                body: expect.any(String),
+                created_at: expect.any(String),
+                votes: expect.any(Number),
+                comment_count: expect.any(Number),
+              })
+            );
+          });
+        });
+    });
+    test("status: 200, should return an empty array if there are no articles with the provided topic", () => {
+      return request(app)
+        .get("/api/articles?topic=worlddomination")
+        .expect(200)
+        .then((response) => {
+          const articles = response.body.articles;
+          expect(articles.length).toBe(0);
+        });
+    });
+    
   });
 });

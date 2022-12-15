@@ -11,13 +11,22 @@ exports.selectTopics = () => {
   });
 };
 
-exports.selectArticles = () => {
+exports.selectArticles = (topic) => {
   queryStr = `
   SELECT *
   FROM articles
-  ORDER BY created_at desc`;
+  `;
+  
+  const queryValues = [];
 
-  return db.query(queryStr).then((articles) => {
+  if (topic) {
+    queryStr += ` WHERE topic = $1`;
+    queryValues.push(topic);
+  }
+
+  queryStr += ` ORDER BY created_at desc;`;
+
+  return db.query(queryStr, queryValues).then((articles) => {
     return articles.rows;
   });
 };
