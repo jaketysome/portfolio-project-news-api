@@ -75,9 +75,20 @@ exports.insertCommentByArticleId = (articleId, reqBody) => {
   ($1, $2, $3)
   RETURNING *`;
 
-  return db
-    .query(queryStr, [body, articleId, username])
-    .then((comment) => {
-      return comment.rows[0];
-    });
+  return db.query(queryStr, [body, articleId, username]).then((comment) => {
+    return comment.rows[0];
+  });
+};
+
+exports.updateArticleByArticleId = (articleId, newVote = 0) => {
+
+  queryStr = `
+  UPDATE articles
+  SET votes = votes + $2
+  WHERE article_id = $1
+  RETURNING *`;
+
+  return db.query(queryStr, [articleId, newVote]).then((article) => {
+    return article.rows[0];
+  });
 };

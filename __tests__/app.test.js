@@ -188,7 +188,7 @@ describe("api", () => {
           const comment = response.body.comment;
           expect(comment.article_id).toBe(2);
           expect(comment.body).toBe("generic comment");
-          expect(comment.author).toBe("butter_bridge")
+          expect(comment.author).toBe("butter_bridge");
           expect(comment).toEqual(
             expect.objectContaining({
               comment_id: expect.any(Number),
@@ -241,6 +241,75 @@ describe("api", () => {
       };
       return request(app)
         .post("/api/articles/2/comments")
+        .send(requestBody)
+        .expect(400)
+        .then((response) => {
+          const msg = response.body.msg;
+          expect(msg).toBe("bad request");
+        });
+    });
+  });
+  describe("PATCH /api/articles/:article_id", () => {
+    test("status: 200, responds with the updated article", () => {
+      const requestBody = { inc_votes: 1 };
+      return request(app)
+        .patch("/api/articles/2")
+        .send(requestBody)
+        .expect(200)
+        .then((response) => {
+          const article = response.body.article;
+          expect(article.article_id).toBe(2);
+          expect(article.votes).toBe(1);
+          expect(article).toEqual(
+            expect.objectContaining({
+              title: expect.any(String),
+              topic: expect.any(String),
+              author: expect.any(String),
+              body: expect.any(String),
+              created_at: expect.any(String),
+            })
+          );
+        });
+    });
+    test("status: 404, valid id but article does not exist", () => {
+      const requestBody = {
+        inc_votes: 1,
+      };
+      return request(app)
+        .patch("/api/articles/25")
+        .send(requestBody)
+        .expect(404)
+        .then((response) => {
+          const msg = response.body.msg;
+          expect(msg).toBe("article not found");
+        });
+    });
+    test("status: 400, invalid article id provided", () => {
+      return request(app)
+        .patch("/api/articles/invalidid")
+        .expect(400)
+        .then((response) => {
+          const msg = response.body.msg;
+          expect(msg).toBe("bad request");
+        });
+    });
+    test("status: 200, no inc_votes key", () => {
+      const requestBody = {};
+      return request(app)
+        .patch("/api/articles/2")
+        .send(requestBody)
+        .expect(200)
+        .then((response) => {
+          const article = response.body.article;
+          expect(article.votes).toBe(0);
+        });
+    });
+    test("status: 400, invalid inv_votes value provided", () => {
+      const requestBody = {
+        inc_votes: 'banana',
+      };
+      return request(app)
+        .patch("/api/articles/2")
         .send(requestBody)
         .expect(400)
         .then((response) => {
