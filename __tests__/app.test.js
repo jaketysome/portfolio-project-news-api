@@ -325,16 +325,108 @@ describe("api", () => {
         .expect(200)
         .then((response) => {
           const users = response.body.users;
-          expect(users.length).toBe(4)
+          expect(users.length).toBe(4);
           users.forEach((user) => {
-              expect(user).toEqual(
-                expect.objectContaining({
-                  username: expect.any(String),
-                  name: expect.any(String),
-                  avatar_url: expect.any(String),
-                })
-              );
-          })
+            expect(user).toEqual(
+              expect.objectContaining({
+                username: expect.any(String),
+                name: expect.any(String),
+                avatar_url: expect.any(String),
+              })
+            );
+          });
+        });
+    });
+  });
+  describe("GET /api/articles?topic", () => {
+    test("status: 200, should return articles filtered by the specified topic", () => {
+      return request(app)
+        .get("/api/articles?topic=mitch")
+        .expect(200)
+        .then((response) => {
+          const articles = response.body.articles;
+          expect(articles.length).toBe(11);
+          articles.forEach((article) => {
+            expect(article.topic).toBe("mitch");
+            expect(article).toEqual(
+              expect.objectContaining({
+                article_id: expect.any(Number),
+                title: expect.any(String),
+                author: expect.any(String),
+                body: expect.any(String),
+                created_at: expect.any(String),
+                votes: expect.any(Number),
+                comment_count: expect.any(Number),
+              })
+            );
+          });
+        });
+    });
+    test("status: 200, valid topic but no articles with this topic", () => {
+      return request(app)
+        .get("/api/articles?topic=paper")
+        .expect(200)
+        .then((response) => {
+          const articles = response.body.articles;
+          expect(articles.length).toBe(0);
+        });
+    });
+    test('status: 404, topic does not exist', () => {
+        return request(app)
+        .get("/api/articles?topic=worlddomination")
+        .expect(404)
+        .then((response) => {
+          const msg = response.body.msg;
+          expect(msg).toBe("topic not found");
+        });
+    });
+  });
+  describe("GET /api/articles?sort_by", () => {
+    test("status: 200, sorts articles by any valid column", () => {
+      return request(app)
+        .get("/api/articles?sort_by=article_id")
+        .expect(200)
+        .then((response) => {
+          const articles = response.body.articles;
+          expect(articles).toBeSortedBy("article_id", { descending: true });
+        });
+    });
+    test("status: 400, invalid sort_by value provided", () => {
+      return request(app)
+        .get("/api/articles?sort_by=banana")
+        .expect(400)
+        .then((response) => {
+          const msg = response.body.msg;
+          expect(msg).toBe("bad request");
+        });
+    });
+  });
+  describe("GET /api/articles?order", () => {
+    test("status: 200, sets the order to ascending or descending as specified", () => {
+      return request(app)
+        .get("/api/articles?order=asc")
+        .expect(200)
+        .then((response) => {
+          const articles = response.body.articles;
+          expect(articles).toBeSortedBy("created_at", { ascending: true });
+        });
+    });
+    test("status: 200, order defaults to descending if not provided", () => {
+      return request(app)
+        .get("/api/articles")
+        .expect(200)
+        .then((response) => {
+          const articles = response.body.articles;
+          expect(articles).toBeSortedBy("created_at", { descending: true });
+        });
+    });
+    test("status: 400, invalid order value provided", () => {
+      return request(app)
+        .get("/api/articles?order=newworld")
+        .expect(400)
+        .then((response) => {
+          const msg = response.body.msg;
+          expect(msg).toBe("bad request");
         });
     });
   });
