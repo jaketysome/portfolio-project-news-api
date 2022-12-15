@@ -4,6 +4,7 @@ const {
   selectArticleById,
   selectCommentsByArticleId,
   checkIfArticleExists,
+  insertCommentByArticleId,
 } = require("../models/models.articles");
 const { countComments } = require("../models/models.comments");
 
@@ -40,25 +41,40 @@ exports.getArticles = (req, res, next) => {
 exports.getArticleById = (req, res, next) => {
   const articleId = req.params.article_id;
 
-  selectArticleById(articleId)
-    .then((article) => {
+  const promises = [
+    checkIfArticleExists(articleId),
+    selectArticleById(articleId),
+  ];
+
+  Promise.all(promises)
+    .then(([articleExists, article]) => {
       res.status(200).send({ article });
     })
-    .catch((err) => {
-      next(err);
-    });
+    .catch(next);
 };
 
 exports.getCommentsByArticleId = (req, res, next) => {
   const articleId = req.params.article_id;
 
-  const promises = [checkIfArticleExists(articleId), selectCommentsByArticleId(articleId)]
+  const promises = [
+    selectCommentsByArticleId(articleId),
+    checkIfArticleExists(articleId),
+  ];
 
-  Promise.all(promises).then(([articleExists, comments]) => {
-      console.log(comments, '<<<< comments')
+  Promise.all(promises)
+    .then(([comments]) => {
       res.status(200).send({ comments });
     })
-    .catch((err) => {
-      next(err);
-    });
+    .catch(next);
+};
+
+exports.postCommentByArticleId = (req, res, next) => {
+  const articleId = req.params.article_id;
+  const reqBody = req.body;
+
+  insertCommentByArticleId(articleId, reqBody)
+    .then((comment) => {
+      res.status(201).send({ comment });
+    })
+    .catch(next);
 };

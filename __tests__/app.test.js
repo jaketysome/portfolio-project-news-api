@@ -22,7 +22,7 @@ describe("api", () => {
         expect(msg).toBe("path not found");
       });
   });
-  describe("/api/topics", () => {
+  describe("GET/api/topics", () => {
     test("status: 200, should return an array of topic objects", () => {
       return request(app)
         .get("/api/topics")
@@ -42,7 +42,7 @@ describe("api", () => {
         });
     });
   });
-  describe("/api/articles", () => {
+  describe("GET/api/articles", () => {
     test("status: 200, should return an array of article objects", () => {
       return request(app)
         .get("/api/articles")
@@ -76,7 +76,7 @@ describe("api", () => {
         });
     });
   });
-  describe("/api/articles/:article_id", () => {
+  describe("GET/api/articles/:article_id", () => {
     test("status: 200, should return the requested article object ", () => {
       return request(app)
         .get("/api/articles/3")
@@ -116,7 +116,7 @@ describe("api", () => {
         });
     });
   });
-  describe("/api/articles/:article_id/comments", () => {
+  describe("GET/api/articles/:article_id/comments", () => {
     test("status: 200, should return an array of comment objects for the given article_id", () => {
       return request(app)
         .get("/api/articles/3/comments")
