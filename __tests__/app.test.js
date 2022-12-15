@@ -362,13 +362,22 @@ describe("api", () => {
           });
         });
     });
-    test("status: 200, should return an empty array if there are no articles with the provided topic", () => {
+    test("status: 200, valid topic but no articles with this topic", () => {
       return request(app)
-        .get("/api/articles?topic=worlddomination")
+        .get("/api/articles?topic=paper")
         .expect(200)
         .then((response) => {
           const articles = response.body.articles;
           expect(articles.length).toBe(0);
+        });
+    });
+    test('status: 404, topic does not exist', () => {
+        return request(app)
+        .get("/api/articles?topic=worlddomination")
+        .expect(404)
+        .then((response) => {
+          const msg = response.body.msg;
+          expect(msg).toBe("topic not found");
         });
     });
   });

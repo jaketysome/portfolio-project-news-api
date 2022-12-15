@@ -25,11 +25,10 @@ exports.selectArticles = (topic, sort_by = "created_at", order = "desc") => {
 
   const validOrderQueries = ["asc", "desc"];
 
-  if (!validSortByQueries.includes(sort_by)) {
-    return Promise.reject({ status: 400, msg: "bad request" });
-  }
-
-  if (!validOrderQueries.includes(order)) {
+  if (
+    !validSortByQueries.includes(sort_by) ||
+    !validOrderQueries.includes(order)
+  ) {
     return Promise.reject({ status: 400, msg: "bad request" });
   }
 

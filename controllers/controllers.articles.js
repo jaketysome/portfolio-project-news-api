@@ -20,10 +20,20 @@ exports.getTopics = (req, res, next) => {
 
 exports.getArticles = (req, res, next) => {
   const { topic, sort_by, order } = req.query;
-  const promises = [countComments(), selectArticles(topic, sort_by, order)];
+
+  const promises = [
+    countComments(),
+    selectTopics(),
+    selectArticles(topic, sort_by, order),
+  ];
 
   Promise.all(promises)
-    .then(([commentCount, articles]) => {
+    .then(([commentCount, topics, articles]) => {
+      const validTopics = topics.map((topic) => topic.slug);
+
+      if (topic && !validTopics.includes(topic)) {
+        return Promise.reject({ status: 404, msg: "topic not found" });
+      }
       articles.forEach((article) => {
         commentCount.forEach((comment) => {
           if (article.title === comment.title) {
