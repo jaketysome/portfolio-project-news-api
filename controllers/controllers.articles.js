@@ -6,6 +6,7 @@ const {
   checkIfArticleExists,
   insertCommentByArticleId,
   updateArticleByArticleId,
+  selectUsers,
 } = require("../models/models.articles");
 const { countComments } = require("../models/models.comments");
 
@@ -94,4 +95,10 @@ exports.patchArticleByArticleId = (req, res, next) => {
       res.status(200).send({ article });
     })
     .catch(next);
+};
+
+exports.getUsers = (req, res, next) => {
+  selectUsers().then((users) => {
+    res.status(200).send({ users });
+  });
 };

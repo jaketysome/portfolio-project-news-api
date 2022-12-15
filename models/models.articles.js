@@ -81,7 +81,6 @@ exports.insertCommentByArticleId = (articleId, reqBody) => {
 };
 
 exports.updateArticleByArticleId = (articleId, newVote = 0) => {
-
   queryStr = `
   UPDATE articles
   SET votes = votes + $2
@@ -90,5 +89,15 @@ exports.updateArticleByArticleId = (articleId, newVote = 0) => {
 
   return db.query(queryStr, [articleId, newVote]).then((article) => {
     return article.rows[0];
+  });
+};
+
+exports.selectUsers = () => {
+  queryStr = `
+  SELECT *
+  FROM users`;
+
+  return db.query(queryStr).then((users) => {
+    return users.rows;
   });
 };
