@@ -80,7 +80,7 @@ exports.insertCommentByArticleId = (articleId, reqBody) => {
   });
 };
 
-exports.updateArticleByArticleId = (articleId, newVote) => {
+exports.updateArticleByArticleId = (articleId, newVote = 0) => {
 
   queryStr = `
   UPDATE articles
