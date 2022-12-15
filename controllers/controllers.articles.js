@@ -41,8 +41,13 @@ exports.getArticles = (req, res, next) => {
 exports.getArticleById = (req, res, next) => {
   const articleId = req.params.article_id;
 
-  selectArticleById(articleId)
-    .then((article) => {
+  const promises = [
+    checkIfArticleExists(articleId),
+    selectArticleById(articleId),
+  ];
+
+  Promise.all(promises)
+    .then(([articleExists, article]) => {
       res.status(200).send({ article });
     })
     .catch(next);
@@ -52,12 +57,12 @@ exports.getCommentsByArticleId = (req, res, next) => {
   const articleId = req.params.article_id;
 
   const promises = [
-    checkIfArticleExists(articleId),
     selectCommentsByArticleId(articleId),
+    checkIfArticleExists(articleId),
   ];
 
   Promise.all(promises)
-    .then(([articleExists, comments]) => {
+    .then(([comments]) => {
       res.status(200).send({ comments });
     })
     .catch(next);
@@ -67,14 +72,9 @@ exports.postCommentByArticleId = (req, res, next) => {
   const articleId = req.params.article_id;
   const reqBody = req.body;
 
-  const promises = [
-    checkIfArticleExists(articleId),
-    insertCommentByArticleId(articleId, reqBody),
-  ];
-
-  Promise.all(promises)
-    .then(([articleExists, postedComment]) => {
-      res.status(201).send({ postedComment });
+  insertCommentByArticleId(articleId, reqBody)
+    .then((comment) => {
+      res.status(201).send({ comment });
     })
     .catch(next);
 };

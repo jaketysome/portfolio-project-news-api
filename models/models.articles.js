@@ -29,9 +29,6 @@ exports.selectArticleById = (articleId) => {
   WHERE article_id = $1`;
 
   return db.query(queryStr, [articleId]).then((article) => {
-    if (article.rowCount === 0) {
-      return Promise.reject({ status: 404, msg: "article not found" });
-    }
     return article.rows[0];
   });
 };
@@ -71,10 +68,6 @@ exports.checkIfArticleExists = (articleId) => {
 exports.insertCommentByArticleId = (articleId, reqBody) => {
   const { body, username } = reqBody;
 
-  if (!username || !body) {
-    return Promise.reject({ status: 400, msg: "bad request" });
-  }
-
   queryStr = `
   INSERT INTO comments
   (body, article_id, author)
@@ -84,7 +77,7 @@ exports.insertCommentByArticleId = (articleId, reqBody) => {
 
   return db
     .query(queryStr, [body, articleId, username])
-    .then((postedComment) => {
-      return postedComment.rows[0];
+    .then((comment) => {
+      return comment.rows[0];
     });
 };

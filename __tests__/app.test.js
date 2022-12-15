@@ -174,8 +174,8 @@ describe("api", () => {
         });
     });
   });
-  describe.only("POST/api/articles/:article_id/comments", () => {
-    test("status: 200, responds with the posted comment", () => {
+  describe("POST/api/articles/:article_id/comments", () => {
+    test("status: 201, responds with the posted comment", () => {
       const requestBody = {
         username: "butter_bridge",
         body: "generic comment",
@@ -185,14 +185,13 @@ describe("api", () => {
         .send(requestBody)
         .expect(201)
         .then((response) => {
-          const postedComment = response.body.postedComment;
-          expect(postedComment.article_id).toBe(2);
-          expect(postedComment).toEqual(
+          const comment = response.body.comment;
+          expect(comment.article_id).toBe(2);
+          expect(comment.body).toBe("generic comment");
+          expect(comment.author).toBe("butter_bridge")
+          expect(comment).toEqual(
             expect.objectContaining({
               comment_id: expect.any(Number),
-              body: expect.any(String),
-              article_id: expect.any(Number),
-              author: expect.any(String),
               votes: expect.any(Number),
               created_at: expect.any(String),
             })
@@ -210,7 +209,7 @@ describe("api", () => {
         .expect(404)
         .then((response) => {
           const msg = response.body.msg;
-          expect(msg).toBe("article not found");
+          expect(msg).toBe("not found");
         });
     });
     test("status: 400, invalid article id provided", () => {
@@ -222,7 +221,7 @@ describe("api", () => {
           expect(msg).toBe("bad request");
         });
     });
-    test("status: 400, username does not exist", () => {
+    test("status: 404, username not found", () => {
       const requestBody = {
         username: "cool_guy73",
         body: "generic comment",
@@ -230,15 +229,15 @@ describe("api", () => {
       return request(app)
         .post("/api/articles/4/comments")
         .send(requestBody)
-        .expect(400)
+        .expect(404)
         .then((response) => {
           const msg = response.body.msg;
-          expect(msg).toBe("bad request");
+          expect(msg).toBe("not found");
         });
     });
     test("status: 400, missing required request keys", () => {
       const requestBody = {
-        body: "generic comment",
+        username: "butter_bridge",
       };
       return request(app)
         .post("/api/articles/2/comments")

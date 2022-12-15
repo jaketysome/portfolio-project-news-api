@@ -3,7 +3,7 @@ const app = express();
 const {
   handleCustomErrors,
   handle500errors,
-  handle400errors,
+  handlePSQLerrors,
   handleIncorrectPath,
 } = require("./controllers/controllers.errors");
 const {
@@ -30,7 +30,7 @@ app.all("*", handleIncorrectPath);
 
 app.use(handleCustomErrors);
 
-app.use(handle400errors);
+app.use(handlePSQLerrors);
 
 app.use(handle500errors);
 
