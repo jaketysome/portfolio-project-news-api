@@ -11,12 +11,33 @@ exports.selectTopics = () => {
   });
 };
 
-exports.selectArticles = (topic) => {
+exports.selectArticles = (topic, sort_by = "created_at", order = "desc") => {
+  const validSortByQueries = [
+    "article_id",
+    "title",
+    "topic",
+    "author",
+    "body",
+    "created_at",
+    "votes",
+    "comment_count",
+  ];
+
+  const validOrderQueries = ["asc", "desc"];
+
+  if (!validSortByQueries.includes(sort_by)) {
+    return Promise.reject({ status: 400, msg: "bad request" });
+  }
+
+  if (!validOrderQueries.includes(order)) {
+    return Promise.reject({ status: 400, msg: "bad request" });
+  }
+
   queryStr = `
   SELECT *
   FROM articles
   `;
-  
+
   const queryValues = [];
 
   if (topic) {
@@ -24,7 +45,7 @@ exports.selectArticles = (topic) => {
     queryValues.push(topic);
   }
 
-  queryStr += ` ORDER BY created_at desc;`;
+  queryStr += ` ORDER BY ${sort_by} ${order}`;
 
   return db.query(queryStr, queryValues).then((articles) => {
     return articles.rows;

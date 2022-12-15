@@ -371,6 +371,54 @@ describe("api", () => {
           expect(articles.length).toBe(0);
         });
     });
-    
+  });
+  describe("GET /api/articles?sort_by", () => {
+    test("status: 200, sorts articles by any valid column", () => {
+      return request(app)
+        .get("/api/articles?sort_by=article_id")
+        .expect(200)
+        .then((response) => {
+          const articles = response.body.articles;
+          expect(articles).toBeSortedBy("article_id", { descending: true });
+        });
+    });
+    test("status: 400, invalid sort_by value provided", () => {
+      return request(app)
+        .get("/api/articles?sort_by=banana")
+        .expect(400)
+        .then((response) => {
+          const msg = response.body.msg;
+          expect(msg).toBe("bad request");
+        });
+    });
+  });
+  describe("GET /api/articles?order", () => {
+    test("status: 200, sets the order to ascending or descending as specified", () => {
+      return request(app)
+        .get("/api/articles?order=asc")
+        .expect(200)
+        .then((response) => {
+          const articles = response.body.articles;
+          expect(articles).toBeSortedBy("created_at", { ascending: true });
+        });
+    });
+    test("status: 200, order defaults to descending if not provided", () => {
+      return request(app)
+        .get("/api/articles")
+        .expect(200)
+        .then((response) => {
+          const articles = response.body.articles;
+          expect(articles).toBeSortedBy("created_at", { descending: true });
+        });
+    });
+    test("status: 400, invalid order value provided", () => {
+      return request(app)
+        .get("/api/articles?order=newworld")
+        .expect(400)
+        .then((response) => {
+          const msg = response.body.msg;
+          expect(msg).toBe("bad request");
+        });
+    });
   });
 });

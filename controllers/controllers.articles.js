@@ -19,8 +19,8 @@ exports.getTopics = (req, res, next) => {
 };
 
 exports.getArticles = (req, res, next) => {
-  const { topic } = req.query;
-  const promises = [countComments(), selectArticles(topic)];
+  const { topic, sort_by, order } = req.query;
+  const promises = [countComments(), selectArticles(topic, sort_by, order)];
 
   Promise.all(promises)
     .then(([commentCount, articles]) => {
