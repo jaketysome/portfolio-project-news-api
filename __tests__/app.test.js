@@ -325,6 +325,7 @@ describe("api", () => {
         .expect(200)
         .then((response) => {
           const users = response.body.users;
+          expect(users.length).toBe(4)
           users.forEach((user) => {
               expect(user).toEqual(
                 expect.objectContaining({
