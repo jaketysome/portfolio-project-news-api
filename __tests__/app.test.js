@@ -306,7 +306,7 @@ describe("api", () => {
     });
     test("status: 400, invalid inv_votes value provided", () => {
       const requestBody = {
-        inc_votes: 'banana',
+        inc_votes: "banana",
       };
       return request(app)
         .patch("/api/articles/2")
@@ -315,6 +315,26 @@ describe("api", () => {
         .then((response) => {
           const msg = response.body.msg;
           expect(msg).toBe("bad request");
+        });
+    });
+  });
+  describe("GET /api/users", () => {
+    test("status: 200, responds with an array of user objects", () => {
+      return request(app)
+        .get("/api/users")
+        .expect(200)
+        .then((response) => {
+          const users = response.body.users;
+          expect(users.length).toBe(4)
+          users.forEach((user) => {
+              expect(user).toEqual(
+                expect.objectContaining({
+                  username: expect.any(String),
+                  name: expect.any(String),
+                  avatar_url: expect.any(String),
+                })
+              );
+          })
         });
     });
   });
