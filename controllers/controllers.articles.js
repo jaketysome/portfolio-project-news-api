@@ -8,7 +8,10 @@ const {
   updateArticleByArticleId,
   selectUsers,
 } = require("../models/models.articles");
-const { countComments } = require("../models/models.comments");
+const {
+  countComments,
+  removeCommentByCommentId,
+} = require("../models/models.comments");
 
 exports.getTopics = (req, res, next) => {
   selectTopics()
@@ -122,4 +125,12 @@ exports.getUsers = (req, res, next) => {
       res.status(200).send({ users });
     })
     .catch(next);
+};
+
+exports.deleteCommentByCommentId = (req, res, next) => {
+  const commentId = req.params.comment_id;
+
+  removeCommentByCommentId(commentId).then(() => {
+    res.status(204).send();
+  });
 };

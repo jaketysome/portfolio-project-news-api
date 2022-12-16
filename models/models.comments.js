@@ -23,3 +23,13 @@ exports.countComments = (articleId) => {
     });
   }
 };
+
+exports.removeCommentByCommentId = (commentId) => {
+  
+  queryStr = `
+  DELETE 
+  FROM comments
+  WHERE comment_id = $1`
+
+  return db.query(queryStr, [commentId]).then(() => {})
+}

@@ -371,8 +371,8 @@ describe("api", () => {
           expect(articles.length).toBe(0);
         });
     });
-    test('status: 404, topic does not exist', () => {
-        return request(app)
+    test("status: 404, topic does not exist", () => {
+      return request(app)
         .get("/api/articles?topic=worlddomination")
         .expect(404)
         .then((response) => {
@@ -428,6 +428,13 @@ describe("api", () => {
           const msg = response.body.msg;
           expect(msg).toBe("bad request");
         });
+    });
+  });
+  describe("DELETE /api/comments/:comment_id", () => {
+    test("status: 204, should delete the given comment by comment id", () => {
+      return request(app)
+        .delete("/api/comments/1")
+        .expect(204)
     });
   });
 });

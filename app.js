@@ -14,6 +14,7 @@ const {
   postCommentByArticleId,
   patchArticleByArticleId,
   getUsers,
+  deleteCommentByCommentId,
 } = require("./controllers/controllers.articles");
 
 app.use(express.json());
@@ -31,6 +32,8 @@ app.post("/api/articles/:article_id/comments", postCommentByArticleId);
 app.patch("/api/articles/:article_id", patchArticleByArticleId);
 
 app.get("/api/users", getUsers);
+
+app.delete("/api/comments/:comment_id", deleteCommentByCommentId);
 
 app.all("*", handleIncorrectPath);
 
