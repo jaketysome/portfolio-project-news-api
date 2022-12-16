@@ -56,11 +56,19 @@ exports.getArticleById = (req, res, next) => {
 
   const promises = [
     checkIfArticleExists(articleId),
+    countComments(articleId),
     selectArticleById(articleId),
   ];
 
   Promise.all(promises)
-    .then(([articleExists, article]) => {
+    .then(([articleExists, commentCount, article]) => {
+      commentCount.forEach((comment) => {
+        if (article.title === comment.title) {
+          article.comment_count = parseInt(comment.comment_count);
+        } else {
+          article.comment_count = 0;
+        }
+      });
       res.status(200).send({ article });
     })
     .catch(next);
