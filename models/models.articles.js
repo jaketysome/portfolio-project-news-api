@@ -120,13 +120,3 @@ exports.updateArticleByArticleId = (articleId, newVote = 0) => {
     return article.rows[0];
   });
 };
-
-exports.selectUsers = () => {
-  queryStr = `
-  SELECT *
-  FROM users`;
-
-  return db.query(queryStr).then((users) => {
-    return users.rows;
-  });
-};

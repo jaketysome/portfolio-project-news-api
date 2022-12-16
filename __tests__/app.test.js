@@ -371,8 +371,8 @@ describe("api", () => {
           expect(articles.length).toBe(0);
         });
     });
-    test('status: 404, topic does not exist', () => {
-        return request(app)
+    test("status: 404, topic does not exist", () => {
+      return request(app)
         .get("/api/articles?topic=worlddomination")
         .expect(404)
         .then((response) => {
@@ -427,6 +427,31 @@ describe("api", () => {
         .then((response) => {
           const msg = response.body.msg;
           expect(msg).toBe("bad request");
+        });
+    });
+  });
+  describe("DELETE /api/comments/:comment_id", () => {
+    test("status: 204, No Content", () => {
+      return request(app)
+        .delete("/api/comments/1")
+        .expect(204)
+    });
+    test("status: 400, invalid comment id provided", () => {
+      return request(app)
+        .delete("/api/comments/bananas")
+        .expect(400)
+        .then((response) => {
+          const msg = response.body.msg;
+          expect(msg).toBe("bad request");
+        });
+    });
+    test("status: 404, valid comment id but does not exist", () => {
+      return request(app)
+        .delete("/api/comments/2345")
+        .expect(404)
+        .then((response) => {
+          const msg = response.body.msg;
+          expect(msg).toBe("comment not found");
         });
     });
   });
