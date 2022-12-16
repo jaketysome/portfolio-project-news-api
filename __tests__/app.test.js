@@ -79,11 +79,12 @@ describe("api", () => {
   describe("GET/api/articles/:article_id", () => {
     test("status: 200, should return the requested article object ", () => {
       return request(app)
-        .get("/api/articles/3")
+        .get("/api/articles/9")
         .expect(200)
         .then((response) => {
           const article = response.body.article;
-          expect(article.article_id).toBe(3);
+          expect(article.article_id).toBe(9);
+          expect(article.comment_count).toBe(2);
           expect(article).toEqual(
             expect.objectContaining({
               article_id: expect.any(Number),
@@ -93,6 +94,7 @@ describe("api", () => {
               body: expect.any(String),
               created_at: expect.any(String),
               votes: expect.any(Number),
+              comment_count: expect.any(Number)
             })
           );
         });
