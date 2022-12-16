@@ -87,14 +87,12 @@ describe("api", () => {
           expect(article.comment_count).toBe(2);
           expect(article).toEqual(
             expect.objectContaining({
-              article_id: expect.any(Number),
               title: expect.any(String),
               topic: expect.any(String),
               author: expect.any(String),
               body: expect.any(String),
               created_at: expect.any(String),
               votes: expect.any(Number),
-              comment_count: expect.any(Number)
             })
           );
         });
