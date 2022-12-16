@@ -12,7 +12,12 @@ beforeEach(() => {
   return seed(testData);
 });
 
-describe("api", () => {
+describe("/api", () => {
+  test("status: 200, should respond with JSON describing all available endpoints", () => {
+    return request(app)
+      .get("/api")
+      .expect(200)
+  });
   test("status: 404, path not found", () => {
     return request(app)
       .get("/api/invalidpath")
@@ -432,9 +437,7 @@ describe("api", () => {
   });
   describe("DELETE /api/comments/:comment_id", () => {
     test("status: 204, No Content", () => {
-      return request(app)
-        .delete("/api/comments/1")
-        .expect(204)
+      return request(app).delete("/api/comments/1").expect(204);
     });
     test("status: 400, invalid comment id provided", () => {
       return request(app)

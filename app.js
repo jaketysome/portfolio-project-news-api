@@ -19,7 +19,11 @@ const {
   deleteCommentByCommentId,
 } = require("./controllers/controllers.comments");
 
+const { getEndpoints } = require("./controllers/controllers.api");
+
 app.use(express.json());
+
+app.get("/api", getEndpoints);
 
 app.get("/api/topics", getTopics);
 

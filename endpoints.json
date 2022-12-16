@@ -10,8 +10,8 @@
     }
   },
   "GET /api/articles": {
-    "description": "serves an array of all topics",
-    "queries": ["author", "topic", "sort_by", "order"],
+    "description": "serves an array of all articles",
+    "queries": ["topic", "sort_by", "order"],
     "exampleResponse": {
       "articles": [
         {
@@ -23,5 +23,86 @@
         }
       ]
     }
+  },
+  "GET/api/articles/:article_id": {
+    "description": "serves an array of comments by article_id, with most recent comment first",
+    "queries": [],
+    "exampleResponse": {
+      "article": {
+        "article_id": 9,
+        "title": "Seafood substitutions are increasing",
+        "topic": "cooking",
+        "author": "weegembump",
+        "body": "Text from the article..",
+        "created_at": 1527695953341,
+        "votes": 0,
+        "comment_count": 2
+      }
+    }
+  },
+  "GET/api/articles/:article_id/comments": {
+    "description": "serves an array of comments by article_id, with most recent comment first",
+    "queries": [],
+    "exampleResponse": {
+      "comment": [
+        {
+          "comment_id": 2,
+          "votes": 7,
+          "created_at": 1527695953341,
+          "author": "weegembump",
+          "body": "Text from the article.."
+        }
+      ]
+    }
+  },
+  "POST/api/articles/:article_id/comments": {
+    "description": "posts a comment to an article by article_id, responds with the posted comment",
+    "queries": [],
+    "exampleResponse": {
+      "comment": [
+        {
+          "comment_id": 2,
+          "votes": 7,
+          "created_at": 1527695953341
+        }
+      ]
+    }
+  },
+  "PATCH /api/articles/:article_id": {
+    "description": "increases the vote count of an article by article_id",
+    "queries": [],
+    "exampleRequest": {
+      "inc_votes": 1
+    },
+    "exampleResponse": {
+      "article": {
+        "article_id": 9,
+        "title": "Seafood substitutions are increasing",
+        "topic": "cooking",
+        "author": "weegembump",
+        "body": "Text from the article..",
+        "created_at": 1527695953341,
+        "votes": 1,
+        "comment_count": 2
+      }
+    }
+  },
+  "GET /api/users": {
+    "description": "serves an array of all users",
+    "queries": [],
+    "exampleResponse": {
+      "users": [
+        {
+          "user_name": "butter_bridge",
+          "name": "jonny",
+          "avatar_url": "https://www.healthytherapies.com/wp-content/uploads/2016/06/Lime3.jpg"
+        }
+      ]
+    }
+  },
+  "DELETE /api/comments/:comment_id": {
+    "description": "deletes a comment by comment_id",
+    "queries": [],
+    "exampleResponse": {}
   }
 }
