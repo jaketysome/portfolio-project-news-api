@@ -30,9 +30,9 @@ Node Version 16.17.0
 
 ### 1. Clone Repository
 
-Please enter command:
+Please run the following command to clone the repository to your local machine:
 
-git clone https://github.com/jaketysome/portfolio-project-news-api.git
+* git clone https://github.com/jaketysome/portfolio-project-news-api.git
 
 ### 2. Install Dependancies
 
