@@ -13,9 +13,11 @@ const {
   getCommentsByArticleId,
   postCommentByArticleId,
   patchArticleByArticleId,
-  getUsers,
-  deleteCommentByCommentId,
 } = require("./controllers/controllers.articles");
+const { getUsers } = require("./controllers/controllers.users");
+const {
+  deleteCommentByCommentId,
+} = require("./controllers/controllers.comments");
 
 app.use(express.json());
 
