@@ -431,11 +431,10 @@ describe("api", () => {
     });
   });
   describe("DELETE /api/comments/:comment_id", () => {
-    test("status: 204, should delete the given comment by comment id", () => {
+    test("status: 204, No Content", () => {
       return request(app)
         .delete("/api/comments/1")
         .expect(204)
-        .then(() => {});
     });
     test("status: 400, invalid comment id provided", () => {
       return request(app)
