@@ -25,16 +25,32 @@ exports.countComments = (articleId) => {
 };
 
 exports.removeCommentByCommentId = (commentId) => {
-  
   queryStr = `
   DELETE 
   FROM comments
   WHERE comment_id = $1
-  RETURNING *`
+  RETURNING *`;
 
   return db.query(queryStr, [commentId]).then((comment) => {
     if (comment.rowCount === 0) {
       return Promise.reject({ status: 404, msg: "comment not found" });
     }
-  })
-}
+  });
+};
+
+exports.updateCommentByCommentId = (commentId, incVotes) => {
+  if (!incVotes) incVotes = 0;
+  
+  queryStr = `
+  UPDATE comments
+  SET votes = votes + $2
+  WHERE comment_id = $1
+  RETURNING *`;
+
+  return db.query(queryStr, [commentId, incVotes]).then((comment) => {
+    if (comment.rowCount === 0) {
+      return Promise.reject({ status: 404, msg: "comment not found" });
+    }
+    return comment.rows[0];
+  });
+};

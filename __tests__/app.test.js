@@ -14,9 +14,7 @@ beforeEach(() => {
 
 describe("/api", () => {
   test("status: 200, should respond with JSON describing all available endpoints", () => {
-    return request(app)
-      .get("/api")
-      .expect(200)
+    return request(app).get("/api").expect(200);
   });
   test("status: 404, path not found", () => {
     return request(app)
@@ -309,7 +307,7 @@ describe("/api", () => {
           expect(article.votes).toBe(0);
         });
     });
-    test("status: 400, invalid inv_votes value provided", () => {
+    test("status: 400, invalid inc_votes value provided", () => {
       const requestBody = {
         inc_votes: "banana",
       };
@@ -455,6 +453,106 @@ describe("/api", () => {
         .then((response) => {
           const msg = response.body.msg;
           expect(msg).toBe("comment not found");
+        });
+    });
+  });
+  describe("GET /api/users/:username", () => {
+    test("status: 200, responds with the requested user as an object", () => {
+      return request(app)
+        .get("/api/users/butter_bridge")
+        .expect(200)
+        .then((response) => {
+          const user = response.body.user;
+          expect(user.username).toBe("butter_bridge");
+          expect(user.name).toBe("jonny");
+          expect(user.avatar_url).toBe(
+            "https://www.healthytherapies.com/wp-content/uploads/2016/06/Lime3.jpg"
+          );
+        });
+    });
+    test("status: 404, username not found", () => {
+      return request(app)
+        .get("/api/users/unknown_user")
+        .expect(404)
+        .then((response) => {
+          const msg = response.body.msg;
+          expect(msg).toBe("user not found");
+        });
+    });
+  });
+  describe("PATCH /api/comments/:comment_id", () => {
+    test("status: 200, should respond with the updated comment", () => {
+      const requestBody = { inc_votes: 1 };
+      return request(app)
+        .patch("/api/comments/1")
+        .send(requestBody)
+        .expect(200)
+        .then((response) => {
+          const comment = response.body.comment;
+          expect(comment.comment_id).toBe(1);
+          expect(comment.votes).toBe(17);
+          expect(comment.article_id).toBe(9);
+          expect(comment.body).toBe(
+            "Oh, I've got compassion running out of my nose, pal! I'm the Sultan of Sentiment!"
+          );
+          expect(comment.author).toBe("butter_bridge");
+        });
+    });
+    test("status: 200, should decrement the votes if provided a negative inc_votes value", () => {
+      const requestBody = { inc_votes: -1 };
+      return request(app)
+        .patch("/api/comments/1")
+        .send(requestBody)
+        .expect(200)
+        .then((response) => {
+          const comment = response.body.comment;
+          expect(comment.comment_id).toBe(1);
+          expect(comment.votes).toBe(15);
+        });
+    });
+    test('status: 200, should return comment unchanged if no inc_votes key provided', () => {
+      const requestBody = {};
+      return request(app)
+        .patch("/api/comments/1")
+        .send(requestBody)
+        .expect(200)
+        .then((response) => {
+          const comment = response.body.comment;
+          expect(comment.comment_id).toBe(1);
+          expect(comment.votes).toBe(16);
+        });
+    });
+    test("status: 404, valid id but comment does not exist", () => {
+      const requestBody = { inc_votes: 1 };
+      return request(app)
+        .patch("/api/comments/3456")
+        .send(requestBody)
+        .expect(404)
+        .then((response) => {
+          const msg = response.body.msg;
+          expect(msg).toBe("comment not found");
+        });
+    });
+    test("status: 400, invalid comment id provided", () => {
+      const requestBody = { inc_votes: 1 };
+      return request(app)
+        .patch("/api/comments/monkey")
+        .send(requestBody)
+        .expect(400)
+        .then((response) => {
+          const msg = response.body.msg;
+          expect(msg).toBe("bad request");
+        });
+    });
+    test('status: 400, invalid inc_votes value provided', () => {
+      const requestBody = { inc_votes: "banana" };
+      return request(app)
+        .patch("/api/comments/1")
+        .send(requestBody)
+        .expect(400)
+        .then((response) => {
+          const msg = response.body.msg;
+          expect(msg).toBe("bad request");
         });
     });
   });

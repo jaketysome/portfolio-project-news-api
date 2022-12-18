@@ -14,9 +14,13 @@ const {
   postCommentByArticleId,
   patchArticleByArticleId,
 } = require("./controllers/controllers.articles");
-const { getUsers } = require("./controllers/controllers.users");
+const {
+  getUsers,
+  getUserByUsername,
+} = require("./controllers/controllers.users");
 const {
   deleteCommentByCommentId,
+  patchCommentByCommentId
 } = require("./controllers/controllers.comments");
 
 const { getEndpoints } = require("./controllers/controllers.api");
@@ -39,7 +43,11 @@ app.patch("/api/articles/:article_id", patchArticleByArticleId);
 
 app.get("/api/users", getUsers);
 
+app.get("/api/users/:username", getUserByUsername);
+
 app.delete("/api/comments/:comment_id", deleteCommentByCommentId);
+
+app.patch("/api/comments/:comment_id", patchCommentByCommentId);
 
 app.all("*", handleIncorrectPath);
 
