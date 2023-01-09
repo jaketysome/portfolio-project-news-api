@@ -358,6 +358,7 @@ describe("/api", () => {
                 author: expect.any(String),
                 body: expect.any(String),
                 created_at: expect.any(String),
+                topic: expect.any(String),
                 votes: expect.any(Number),
                 comment_count: expect.any(Number),
               })
