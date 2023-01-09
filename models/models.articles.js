@@ -33,8 +33,17 @@ exports.selectArticles = (topic, sort_by = "created_at", order = "desc") => {
   }
 
   queryStr = `
-  SELECT *
+  SELECT 
+    articles.article_id, 
+    articles.title, 
+    articles.topic, 
+    articles.author, 
+    articles.body, 
+    articles.created_at, 
+    articles.votes, 
+    COUNT(comments.article_id) AS comment_count
   FROM articles
+  LEFT JOIN comments ON articles.article_id = comments.article_id
   `;
 
   const queryValues = [];
@@ -44,7 +53,9 @@ exports.selectArticles = (topic, sort_by = "created_at", order = "desc") => {
     queryValues.push(topic);
   }
 
-  queryStr += ` ORDER BY ${sort_by} ${order}`;
+  queryStr += `
+  GROUP BY articles.article_id
+  ORDER BY ${sort_by} ${order}`;
 
   return db.query(queryStr, queryValues).then((articles) => {
     return articles.rows;

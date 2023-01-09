@@ -24,27 +24,21 @@ exports.getArticles = (req, res, next) => {
   const { topic, sort_by, order } = req.query;
 
   const promises = [
-    countComments(),
     selectTopics(),
     selectArticles(topic, sort_by, order),
   ];
 
   Promise.all(promises)
-    .then(([commentCount, topics, articles]) => {
+    .then(([topics, articles]) => {
       const validTopics = topics.map((topic) => topic.slug);
 
       if (topic && !validTopics.includes(topic)) {
         return Promise.reject({ status: 404, msg: "topic not found" });
       }
       articles.forEach((article) => {
-        commentCount.forEach((comment) => {
-          if (article.title === comment.title) {
-            article.comment_count = parseInt(comment.comment_count);
-          } else {
-            article.comment_count = 0;
-          }
-        });
-      });
+        article.comment_count = parseInt(article.comment_count)
+      })
+      
       return articles;
     })
     .then((articles) => {
