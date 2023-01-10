@@ -21,5 +21,6 @@ exports.handlePSQLerrors = (err, req, res, next) => {
 };
 
 exports.handle500errors = (err, req, res, next) => {
+  console.log(err, "<<< err")
   res.status(500).send({ msg: "server error" });
 };

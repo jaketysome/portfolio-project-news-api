@@ -120,14 +120,37 @@ exports.insertCommentByArticleId = (articleId, reqBody) => {
   });
 };
 
-exports.updateArticleByArticleId = (articleId, newVote = 0) => {
+exports.updateArticleByArticleId = (articleId, newVote=0) => {
+
   queryStr = `
-  UPDATE articles
-  SET votes = votes + $2
-  WHERE article_id = $1
-  RETURNING *`;
+  WITH updated AS (
+    UPDATE articles
+    SET votes = votes + $2
+    WHERE article_id = $1
+    RETURNING *)
+    SELECT 
+        updated.article_id, 
+        updated.title, 
+        updated.topic, 
+        updated.author, 
+        updated.body, 
+        updated.created_at, 
+        updated.votes, 
+        COUNT(comments.article_id) AS comment_count
+    FROM updated
+    LEFT JOIN comments ON updated.article_id = comments.article_id
+    WHERE updated.article_id = $1
+    GROUP BY 
+        updated.article_id, 
+        updated.title, 
+        updated.topic, 
+        updated.author, 
+        updated.body, 
+        updated.created_at, 
+        updated.votes`;
 
   return db.query(queryStr, [articleId, newVote]).then((article) => {
+    console.log(article.rows, "<<< patched article")
     return article.rows[0];
   });
 };
