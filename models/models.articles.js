@@ -150,7 +150,6 @@ exports.updateArticleByArticleId = (articleId, newVote=0) => {
         updated.votes`;
 
   return db.query(queryStr, [articleId, newVote]).then((article) => {
-    console.log(article.rows, "<<< patched article")
     return article.rows[0];
   });
 };

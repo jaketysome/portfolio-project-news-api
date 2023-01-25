@@ -4,6 +4,9 @@ exports.readEndpoints = () => {
   return fs.readFile(
     `${__dirname}/../endpoints.json`,
     "utf-8",
-    (endpoints) => {}
+    (endpoints) => {
+      const parsedEndpoints = JSON.parse(endpoints)
+      return parsedEndpoints;
+    }
   );
 };

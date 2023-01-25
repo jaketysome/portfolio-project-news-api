@@ -14,7 +14,7 @@ beforeEach(() => {
 
 describe("/api", () => {
   test("status: 200, should respond with JSON describing all available endpoints", () => {
-    return request(app).get("/api").expect(200);
+    return request(app).get("/api").expect(200).then();
   });
   test("status: 404, path not found", () => {
     return request(app)
